@@ -1,0 +1,30 @@
+{
+  "name": "pi-thermal-monitoring",
+  "version": "1.0.0",
+  "description": "PiThermalMonitoring is an application which thanks to ds18b20 sensor allow you to check your temperature evolution.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.martin-abadie.fr/MartinAbadie/PiThermalMonitoring.git"
+  },
+  "keywords": [
+    "Node.js",
+    "MySQL",
+    "Raspberry",
+    "Pi",
+    "ds18b20",
+    "Temperature",
+    "Monitoring"
+  ],
+  "author": "Martin Abadie",
+  "license": "BSD-4-Clause",
+  "dependencies": {
+    "ds18b20": "^0.1.0",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "mysql": "^2.15.0"
+  }
+}
