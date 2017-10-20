@@ -38,7 +38,6 @@ http.createServer(function(req, res) {
                 </body>
             </html>
                 `);
-            res.end();
         });
     });
 }).listen(8666);
