@@ -42,6 +42,13 @@ http.createServer(function(req, res) {
 }).listen(8666);
 
 function save_new_temp_value(decimal_value) {
+    var sql = "INSERT INTO thermal_historic SET decimal_value = " + decimal_value;
+    console.log(sql);
+    con.query(sql, function(err, result) {
+        if(err) throw err;
+        console.log("Number of records inserted: " + result.affectedRows);
+    });
+    /*
     con.connect(function(err) {
         if (err) throw err;
         console.log("Connected!");
@@ -52,4 +59,5 @@ function save_new_temp_value(decimal_value) {
             console.log("Number of records inserted: " + result.affectedRows);
         });
     });
+    */
 }
