@@ -17,7 +17,7 @@ http.createServer(function(req, res) {
         ds18b20.temperature('28-051684eebbff', function(err, value) {
             console.log("INFO : callback ds18b20 with value " + value);
             save_new_temp_value(value, function() {
-                res.writeHead(200, {'Content-type':'text/html'});
+                //res.writeHead(200, {'Content-type':'text/html'});
                 res.write(`
                 <html>
                     <head>
@@ -41,7 +41,7 @@ http.createServer(function(req, res) {
                     `);
             });
         });
-    })
+    }, 500);
 }).listen(8666);
 
 function save_new_temp_value(decimal_value, callback) {
