@@ -14,39 +14,41 @@ let con = mysql.createConnection({
 
 http.createServer(function(req, res) {
     ds18b20.temperature('28-051684eebbff', function(err, value) {
-        save_new_temp_value(value);
-        res.writeHead(200, {'Content-type':'text/html'});
-        res.write(`
-        <html>
-            <head>
-                <meta charset="utf-8">
-                <title>PiThermalMonitoring</title>
-                <style>
-                    .temp {
-                        font-family: Verdana, Geneva, sans-serif;
-                        text-align: center;
-                        margin-top: 50vh;
-                        transform: translateY(-50%);
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="temp">
-                    ` + value + `°C
-                </div>
-            </body>
-        </html>
-            `);
-        res.end();
+        save_new_temp_value(value, function() {
+            res.writeHead(200, {'Content-type':'text/html'});
+            res.write(`
+            <html>
+                <head>
+                    <meta charset="utf-8">
+                    <title>PiThermalMonitoring</title>
+                    <style>
+                        .temp {
+                            font-family: Verdana, Geneva, sans-serif;
+                            text-align: center;
+                            margin-top: 50vh;
+                            transform: translateY(-50%);
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="temp">
+                        ` + value + `°C
+                    </div>
+                </body>
+            </html>
+                `);
+            res.end();
+        });
     });
 }).listen(8666);
 
-function save_new_temp_value(decimal_value) {
+function save_new_temp_value(decimal_value, callback) {
     var sql = "INSERT INTO thermal_historic SET decimal_value = " + decimal_value;
     console.log(sql);
     con.query(sql, function(err, result) {
         if(err) throw err;
         console.log("Number of records inserted: " + result.affectedRows);
+        callback();
     });
     /*
     con.connect(function(err) {
