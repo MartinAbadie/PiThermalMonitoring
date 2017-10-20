@@ -8,7 +8,8 @@ var fs = require('fs');
 let con = mysql.createConnection({
     host: databse_config.host,
     user: databse_config.user,
-    password: databse_config.password
+    password: databse_config.password,
+    database: databse_config.database
 });
 
 http.createServer(function(req, res) {
