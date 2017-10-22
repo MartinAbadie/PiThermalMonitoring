@@ -19,7 +19,7 @@
 <body>
     <div class="temperature"></div>
     <script type="text/javascript">
-        var socket = io.connect("http://localhost:8666");
+        var socket = io.connect("http://node.thermal.martin-abadie.fr");
         socket.on('message', function(message) {
             $('.temperature').html(message + '°C');
         });
