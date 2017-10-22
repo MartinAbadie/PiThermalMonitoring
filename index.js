@@ -16,7 +16,7 @@ let con = mysql.createConnection({
 var server = http.createServer();
 io.listen(server);
 
-io.on('connection', function(socket) {
+io.sockets.on('connection', function(socket) {
     setInterval(function() {
         ds18b20.temperature('28-051684eebbff', function(err, value) {
             socket.emit('message', { content: value, importance: '1'});
