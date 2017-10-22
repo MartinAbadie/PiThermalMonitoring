@@ -1,6 +1,5 @@
 var databse_config = require('./database-config.json');
 var ds18b20 = require('ds18b20');
-var io = require('socket.io');
 var mysql = require('mysql');
 var http = require('http');
 var fs = require('fs');
@@ -14,12 +13,12 @@ let con = mysql.createConnection({
 });
 
 var server = http.createServer();
-io.listen(server);
+var io = require('socket.io')(http);
 
-io.sockets.on('connection', function(socket) {
+io.on('connection', function(server) {
     setInterval(function() {
         ds18b20.temperature('28-051684eebbff', function(err, value) {
-            socket.emit('message', { content: value, importance: '1'});
+            io.emit('message', { content: value, importance: '1'});
         });
     }, 100);
 });
@@ -60,7 +59,7 @@ function(req, res) {
 */
 
 
-server.listen(8666);
+//server.listen(8666);
 
 function save_new_temp_value(decimal_value, callback) {
     console.log("INFO : save_new_temp_value called");
