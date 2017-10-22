@@ -14,13 +14,13 @@ let con = mysql.createConnection({
 });
 
 var server = http.createServer();
-io.listen(server);
+io = io.listen(server);
 
-io.on('connection', function(server) {
+io.on('connection', function(socket) {
     console.log('New connection');
     setInterval(function() {
         ds18b20.temperature('28-051684eebbff', function(err, value) {
-            io.emit('message', { content: value, importance: '1'});
+            socket.emit('message', { content: value, importance: '1'});
         });
     }, 100);
 });
@@ -61,7 +61,7 @@ function(req, res) {
 */
 
 
-//server.listen(8666);
+server.listen(8666);
 
 function save_new_temp_value(decimal_value, callback) {
     console.log("INFO : save_new_temp_value called");
