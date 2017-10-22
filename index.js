@@ -20,7 +20,7 @@ io.sockets.on('connection', function(socket) {
     console.log('New connection');
     setInterval(function() {
         ds18b20.temperature('28-051684eebbff', function(err, value) {
-            socket.emit('message', { content: value, importance: '1'});
+            socket.emit('message', value);
         });
     }, 100);
 });
