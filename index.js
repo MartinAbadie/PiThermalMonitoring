@@ -16,7 +16,7 @@ let con = mysql.createConnection({
 var server = http.createServer();
 io = io.listen(server);
 
-io.on('connection', function(socket) {
+io.sockets.on('connection', function(socket) {
     console.log('New connection');
     setInterval(function() {
         ds18b20.temperature('28-051684eebbff', function(err, value) {
@@ -61,7 +61,7 @@ function(req, res) {
 */
 
 
-server.listen(8666);
+//server.listen(8666);
 
 function save_new_temp_value(decimal_value, callback) {
     console.log("INFO : save_new_temp_value called");
