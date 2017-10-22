@@ -20,13 +20,20 @@ io = io.listen(server);
 
 io.sockets.on('connection', function(socket) {
     console.log('New connection');
-    setInterval(function() {
+    /*setInterval(function() {
         ds18b20.temperature('28-051684eebbff', function(err, value) {
             socket.emit('message', value);
         });
-    }, 200);
+    }, 200);*/
 });
 
+io.sockets.on('message', function(message) {
+    if(message === 'temp?') {
+        ds18b20.temperature('28-051684eebbff', function(err, value) {
+            socket.emit('message', value);
+        });
+    }
+})
 /*
 io.sockets.on('connection', function(socket) {
     console.log('New connection');
