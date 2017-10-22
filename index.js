@@ -13,7 +13,9 @@ let con = mysql.createConnection({
     database: databse_config.database
 });
 
-var server = http.createServer();
+var server = http.createServer(function(req, res) {
+    res.end('Hello');
+});
 io = io.listen(server);
 
 /*
