@@ -13,7 +13,7 @@ let con = mysql.createConnection({
 });
 
 var server = http.createServer();
-var io = require('socket.io')(http);
+var io = require('socket.io')(server);
 
 io.on('connection', function(server) {
     console.log('New connection');
