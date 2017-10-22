@@ -16,6 +16,7 @@ var server = http.createServer();
 var io = require('socket.io')(http);
 
 io.on('connection', function(server) {
+    console.log('New connection');
     setInterval(function() {
         ds18b20.temperature('28-051684eebbff', function(err, value) {
             io.emit('message', { content: value, importance: '1'});
