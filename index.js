@@ -16,6 +16,7 @@ let con = mysql.createConnection({
 var server = http.createServer();
 io = io.listen(server);
 
+/*
 io.sockets.on('connection', function(socket) {
     console.log('New connection');
     setInterval(function() {
@@ -23,6 +24,14 @@ io.sockets.on('connection', function(socket) {
             socket.emit('message', value);
         });
     }, 100);
+});
+*/
+
+io.sockets.on('connection', function(socket) {
+    console.log('New connection');
+    ds18b20.temperature('28-051684eebbff', function(err, value) {
+        socket.emit('message', value);
+    });
 });
 
 server.listen(8666);
