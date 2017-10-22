@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!-- Author: Martin ABADIE martin-abadie.fr -->
+<html>
+
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <title>PiThermalMonitoring</title>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        .temperature {
+            font-family: Verdana, Geneva, sans-serif;
+            text-align: center;
+            margin-top: 50vh;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="temperature"></div>
+    <script type="text/javascript">
+        var socket = io.connect("http://localhost:8666");
+        socket.on('message', function(message) {
+            $('.temperature').html(message + '°C');
+        });
+    </script>
+</body>
+</html>
