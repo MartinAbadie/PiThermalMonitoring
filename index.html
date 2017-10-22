@@ -20,15 +20,20 @@
     <div class="temperature"></div>
     <script type="text/javascript">
         var socket = io.connect("http://node.thermal.martin-abadie.fr");
-        window.setInterval(function() {
-            console.log('Querying...');
-            socket.emit('message', 'temp?');
-        }, 200);
-        
-        socket.on('message', function(message) {
-            console.log(message);
-            $('.temperature').html(message + '°C');
-        });
+        if(socket) {
+            console.log('Connected!');
+            window.setInterval(function() {
+                console.log('Querying...');
+                socket.emit('message', 'temp?');
+            }, 200);
+
+            socket.on('message', function(message) {
+                console.log(message);
+                $('.temperature').html(message + '°C');
+            });
+        } else {
+            console.log('Connection failed');
+        }
     </script>
 </body>
 </html>
