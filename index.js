@@ -1,5 +1,6 @@
 var databse_config = require('./database-config.json');
 var ds18b20 = require('ds18b20');
+var io = require('socket.io');
 var mysql = require('mysql');
 var http = require('http');
 var fs = require('fs');
@@ -13,7 +14,7 @@ let con = mysql.createConnection({
 });
 
 var server = http.createServer();
-var io = require('socket.io')(server);
+io.listen(server);
 
 io.on('connection', function(server) {
     console.log('New connection');
