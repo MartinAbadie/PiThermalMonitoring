@@ -24,7 +24,7 @@ io.sockets.on('connection', function(socket) {
         ds18b20.temperature('28-051684eebbff', function(err, value) {
             socket.emit('message', value);
         });
-    }, 100);
+    }, 200);
 });
 
 /*
