@@ -18,17 +18,23 @@
 </head>
 <body>
     <div class="temperature"></div>
+    <button click="sendQuery();">Tester</button>
+    
     <script type="text/javascript">
 
+        let socket;
+
         $('document').ready(function() {
-            var socket = io.connect("http://node.thermal.martin-abadie.fr");
+            socket = io.connect("http://node.thermal.martin-abadie.fr");
             if(socket) {
                 console.log('Connected!');
-                
+
+                /*
                 window.setInterval(function() {
                     console.log('Querying...');
                     socket.emit('message', 'temp?');
                 }, 200);
+                */
 
                 socket.on('message', function(message) {
                     console.log(message);
@@ -38,6 +44,11 @@
                 console.log('Connection failed');
             }
         });
+
+        function sendQuery() {
+            socket.emit('message', 'temp?');
+            console.log('Query sent');
+        }
     </script>
 </body>
 </html>
