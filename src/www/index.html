@@ -34,6 +34,16 @@
                 strokeWidth: 0.035, // The thickness
                 color: '#000000' // Fill color
             },
+            staticLabels: {
+                font: "10px sans-serif",  // Specifies font
+                color: "#000000",  // Optional: Label text color
+                fractionDigits: 0  // Optional: Numerical precision. 0=round off.
+            },
+            staticZones: [
+                {strokeStyle: "#F03E3E", min: 45, max: 60}, // Red from 100 to 130
+                {strokeStyle: "##f07f3e", min: 35, max: 45}, // Orange
+                {strokeStyle: "#30B32D", min: 0, max: 35}, // Green
+            ],
             limitMax: false,     // If false, max value increases automatically if value > maxValue
             limitMin: false,     // If true, the min value of the gauge will be fixed
             colorStart: '#6FADCF',   // Colors
