@@ -28,7 +28,7 @@ io.sockets.on('message', function(message) {
         socket.emit('message', value);
         console.log('send value');
     });
-})
+});
 /*
 io.sockets.on('connection', function(socket) {
     console.log('New connection');
