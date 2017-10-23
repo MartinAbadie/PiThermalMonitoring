@@ -28,11 +28,9 @@ io.sockets.on('connection', function(socket) {
 });
 
 io.sockets.on('message', function(message) {
-    if(message === 'temp?') {
-        ds18b20.temperature('28-051684eebbff', function(err, value) {
-            socket.emit('message', value);
-        });
-    }
+    ds18b20.temperature('28-051684eebbff', function(err, value) {
+        socket.emit('message', value);
+    });
 })
 /*
 io.sockets.on('connection', function(socket) {
