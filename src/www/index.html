@@ -7,6 +7,7 @@
     <title>PiThermalMonitoring</title>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script src="lib/gauge.js"></script>
     <link rel="icon" type="image/png" href="images/logo.png" />
     <style>
         .temperature {
@@ -24,6 +25,29 @@
 
         let socket;
 
+        var opts = {
+            angle: 0.15, // The span of the gauge arc
+            lineWidth: 0.44, // The line thickness
+            radiusScale: 1, // Relative radius
+            pointer: {
+                length: 0.6, // // Relative to gauge radius
+                strokeWidth: 0.035, // The thickness
+                color: '#000000' // Fill color
+            },
+            limitMax: false,     // If false, max value increases automatically if value > maxValue
+            limitMin: false,     // If true, the min value of the gauge will be fixed
+            colorStart: '#6FADCF',   // Colors
+            colorStop: '#8FC0DA',    // just experiment with them
+            strokeColor: '#E0E0E0',  // to see which ones work best for you
+            generateGradient: true,
+            highDpiSupport: true     // High resolution support
+        };
+        var target = $('temperature'); // your canvas element
+        let gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
+        gauge.maxValue = 60; // set max gauge value
+        gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
+        gauge.animationSpeed = 32; // set animation speed (32 is default value)
+
         $('document').ready(function() {
             socket = io.connect("http://node.thermal.martin-abadie.fr");
             if(socket) {
@@ -39,6 +63,7 @@
                 socket.on('message', function(message) {
                     //console.log(message);
                     $('.temperature').html(message + '°C');
+                    gauge.set(message); // set actual value
                 });
 
                 socket.on('disconnect', function() {
