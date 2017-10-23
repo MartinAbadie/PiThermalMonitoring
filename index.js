@@ -29,13 +29,6 @@ io.sockets.on('connection', function(socket) {
     });
 });
 
-io.sockets.on('message', function(message) {
-    console.log('New message');
-    ds18b20.temperature('28-051684eebbff', function(err, value) {
-        socket.emit('message', value);
-        console.log('send value');
-    });
-});
 /*
 io.sockets.on('connection', function(socket) {
     console.log('New connection');

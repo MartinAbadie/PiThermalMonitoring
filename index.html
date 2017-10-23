@@ -18,7 +18,6 @@
 </head>
 <body>
     <div class="temperature"></div>
-    <button id="test-btn" onClick="sendQuery();">Tester</button>
 
     <script type="text/javascript">
 
@@ -29,12 +28,10 @@
             if(socket) {
                 console.log('Connected!');
 
-                /*
                 window.setInterval(function() {
                     console.log('Querying...');
                     socket.emit('message', 'temp?');
-                }, 200);
-                */
+                }, 300);
 
                 socket.on('message', function(message) {
                     console.log(message);
