@@ -10,16 +10,51 @@
     <script src="lib/gauge.js"></script>
     <link rel="icon" type="image/png" href="images/logo.png" />
     <style>
+        body {
+            background: #252526;
+            color: white;
+        }
+
         .temperature {
             font-family: Verdana, Geneva, sans-serif;
             text-align: center;
             margin-top: 50vh;
             transform: translateY(-50%);
         }
+
+        #temperature-value-container {
+            width: 100%;
+            text-align: center;
+        }
+
+        #temperature-value {
+            font-family: Verdana, Geneva, sans-serif;
+            border-radius: 5px;
+            background: #1D1D1D;
+            box-shadow: 1px 1px #1A1A1A;
+            padding-top: 5px;
+            width: 90px;
+            height: 25px; 
+            display: inline-block;
+            font-family: Verdana, Geneva, sans-serif;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <canvas id="temperature">gauge</canvas>
+    <div class="temperature">
+        <canvas id="temperature-gauge">gauge</canvas>
+        <br/>
+        
+    </div>
+    <div id="temperature-value-container">
+        <div id="temperature-value">0</div>
+    </div>
+
+
+
+
+
 
     <script type="text/javascript">
 
@@ -32,27 +67,22 @@
             pointer: {
                 length: 0.6, // // Relative to gauge radius
                 strokeWidth: 0.035, // The thickness
-                color: '#000000' // Fill color
+                color: '#FFFFFF' // Fill color
             },
-            staticLabels: {
-                font: "10px sans-serif",  // Specifies font
-                color: "#000000",  // Optional: Label text color
-                fractionDigits: 0  // Optional: Numerical precision. 0=round off.
-            },/*
             staticZones: [
-                {strokeStyle: "#F03E3E", min: 45, max: 60}, // Red from 100 to 130
-                {strokeStyle: "##f07f3e", min: 35, max: 45}, // Orange
+                {strokeStyle: "#FF0000", min: 45, max: 60}, // Red from 100 to 130
+                {strokeStyle: "#F07F3E", min: 35, max: 45}, // Orange
                 {strokeStyle: "#30B32D", min: 0, max: 35}, // Green
-            ],*/
+            ],
             limitMax: false,     // If false, max value increases automatically if value > maxValue
             limitMin: false,     // If true, the min value of the gauge will be fixed
             colorStart: '#6FADCF',   // Colors
             colorStop: '#8FC0DA',    // just experiment with them
-            strokeColor: '#E0E0E0',  // to see which ones work best for you
+            strokeColor: '#FFFFFF',  // to see which ones work best for you
             generateGradient: true,
             highDpiSupport: true     // High resolution support
         };
-        var target = document.getElementById('temperature'); // your canvas element
+        var target = document.getElementById('temperature-gauge'); // your canvas element
         //var target = $('#temperature'); // your canvas element
         let gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
         gauge.maxValue = 60; // set max gauge value
@@ -73,7 +103,8 @@
 
                 socket.on('message', function(message) {
                     //console.log(message);
-                    $('.temperature').html(message + '°C');
+                    //$('.temperature').html(message + '°C');
+                    $('#temperature-value').html('<b>' + message + '°C</b>');
                     gauge.set(message); // set actual value
                 });
 
