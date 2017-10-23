@@ -27,52 +27,7 @@ io.sockets.on('connection', function(socket) {
     });
 });
 
-/*
-io.sockets.on('connection', function(socket) {
-    console.log('New connection');
-    ds18b20.temperature('28-051684eebbff', function(err, value) {
-        socket.emit('message', value);
-    });
-});
-*/
-
 server.listen(8666);
-
-/*
-function(req, res) {
-    ds18b20.temperature('28-051684eebbff', function(err, value) {
-        console.log("INFO : callback ds18b20 with value " + value);
-        save_new_temp_value(value, function() {
-            res.writeHead(200, {'Content-type':'text/html'});
-            res.write(`
-            <html>
-                <head>
-                    <meta charset="utf-8">
-                    <title>PiThermalMonitoring</title>
-                    <style>
-                        .temp {
-                            font-family: Verdana, Geneva, sans-serif;
-                            text-align: center;
-                            margin-top: 50vh;
-                            transform: translateY(-50%);
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="temp">
-                        ` + value + `°C
-                    </div>
-                </body>
-            </html>
-                `);
-            res.end();
-        });
-    });
-});
-*/
-
-
-//server.listen(8666);
 
 function save_new_temp_value(decimal_value, callback) {
     console.log("INFO : save_new_temp_value called");
@@ -82,16 +37,4 @@ function save_new_temp_value(decimal_value, callback) {
         console.log("Number of records inserted: " + result.affectedRows);
         callback();
     });
-    /*
-    con.connect(function(err) {
-        if (err) throw err;
-        console.log("Connected!");
-        var sql = "INSERT INTO thermal_historic SET decimal_value = " + decimal_value;
-        console.log(sql);
-        con.query(sql, function(err, result) {
-            if(err) throw err;
-            console.log("Number of records inserted: " + result.affectedRows);
-        });
-    });
-    */
 }
