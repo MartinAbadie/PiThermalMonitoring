@@ -28,15 +28,22 @@
             if(socket) {
                 console.log('Connected!');
 
-                window.setInterval(function() {
-                    console.log('Querying...');
-                    socket.emit('message', 'temp?');
+                var id = window.setInterval(function() {
+                    if(socket) {
+                        console.log('Querying...');
+                        socket.emit('message', 'temp?');
+                    }
                 }, 300);
 
                 socket.on('message', function(message) {
                     console.log(message);
                     $('.temperature').html(message + '°C');
                 });
+
+                socket.on('disconnect', function() {
+                    clearInterval(id);
+                    console.log('Server close');
+                })
             } else {
                 console.log('Connection failed');
             }
