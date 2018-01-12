@@ -1,142 +1,235 @@
 <!DOCTYPE html>
 <!-- Author: Martin ABADIE martin-abadie.fr -->
 <html>
-
-<head>
-    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>PiThermalMonitoring</title>
-    <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-    <script src="lib/gauge.js"></script>
-    <link rel="icon" type="image/png" href="images/logo-blue.png" />
-    <style>
-        body {
-            background: #252526;
-            color: white;
-        }
-
-        .temperature {
-            font-family: Verdana, Geneva, sans-serif;
-            text-align: center;
-            margin-top: 50vh;
-            transform: translateY(-50%);
-        }
-
-        #temperature-value-container {
-            width: 100%;
-            text-align: center;
-        }
-
-        #temperature-value {
-            font-family: Verdana, Geneva, sans-serif;
-            border-radius: 5px;
-            background: #1D1D1D;
-            box-shadow: 1px 1px #1A1A1A;
-            padding-top: 5px;
-            width: 90px;
-            height: 25px; 
-            display: inline-block;
-            font-family: Verdana, Geneva, sans-serif;
-            text-align: center;
-        }
-
-        a {
-            text-decoration: none;
-            color: lightslategray;
-        }
-
-        footer {
-            position: absolute; 
-            bottom: 2%;
-            font-family: Verdana, Geneva, sans-serif;
-            color: lightslategray;
-            text-align: center;
-            font-size: 8pt;
-            margin: 0 auto;
-            left: 0;
-            right: 0;
-        }
-    </style>
-</head>
-<body>
-    <div class="temperature">
-        <canvas id="temperature-gauge">gauge</canvas>
-        <br/>
-        
-    </div>
-    <div id="temperature-value-container">
-        <div id="temperature-value">0</div>
-    </div>
-
-
-
-
-
-
-    <script type="text/javascript">
-
-        let socket;
-
-        var opts = {
-            angle: 0.15, // The span of the gauge arc
-            lineWidth: 0.44, // The line thickness
-            radiusScale: 1, // Relative radius
-            pointer: {
-                length: 0.6, // // Relative to gauge radius
-                strokeWidth: 0.035, // The thickness
-                color: '#FFFFFF' // Fill color
-            },
-            staticZones: [
-                {strokeStyle: "#FF0000", min: 45, max: 60}, // Red from 100 to 130
-                {strokeStyle: "#F07F3E", min: 35, max: 45}, // Orange
-                {strokeStyle: "#30B32D", min: 0, max: 35}, // Green
-            ],
-            limitMax: false,     // If false, max value increases automatically if value > maxValue
-            limitMin: false,     // If true, the min value of the gauge will be fixed
-            colorStart: '#6FADCF',   // Colors
-            colorStop: '#8FC0DA',    // just experiment with them
-            strokeColor: '#FFFFFF',  // to see which ones work best for you
-            generateGradient: true,
-            highDpiSupport: true     // High resolution support
-        };
-        var target = document.getElementById('temperature-gauge'); // your canvas element
-        //var target = $('#temperature'); // your canvas element
-        let gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-        gauge.maxValue = 60; // set max gauge value
-        gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
-        gauge.animationSpeed = 32; // set animation speed (32 is default value)
-
-        $('document').ready(function() {
-            socket = io.connect("https://node.thermal.martin-abadie.fr");
-            if(socket) {
-                console.log('Connected!');
-
-                var id = window.setInterval(function() {
-                    if(socket) {
-                        //console.log('Querying...');
-                        socket.emit('message', 'temp?');
-                    }
-                }, 300);
-
-                socket.on('message', function(message) {
-                    //console.log(message);
-                    //$('.temperature').html(message + '°C');
-                    $('#temperature-value').html('<b>' + message + '°C</b>');
-                    gauge.set(message); // set actual value
-                });
-
-                socket.on('disconnect', function() {
-                    clearInterval(id);
-                    console.log('Server close');
-                })
-            } else {
-                console.log('Connection failed');
+    <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>PiThermalMonitoring</title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">    
+        <link rel="icon" type="image/png" href="images/logo-blue.png" />
+        <style>
+            body {
+                background: #252526;
+                color: white;
+                font-family: Verdana, Geneva, sans-serif;
+                text-align: center;
             }
-        });
-    </script>
-</body>
-<footer>
-    <img src="images/logo-red.png" width="32" height="33" style="margin-bottom: -1%;"> <b>•</b> <a href="https://git.martin-abadie.fr/MartinAbadie/PiThermalMonitoring" target="blank_" >PiThermalMonitoring</a> <b>•</b> Developped by <a href="https://martin-abadie.fr" target="blank_" >Martin Abadie</a>
-</footer>
+
+            .vertical_center {
+                margin-top: 50vh;
+                transform: translateY(-50%);
+            }
+
+            #speed-value {
+                font-family: Verdana, Geneva, sans-serif;
+                border-radius: 5px;
+                background: #1D1D1D;
+                box-shadow: 1px 1px #1A1A1A;
+                padding-top: 5px;
+                padding-bottom: 30px;
+                width: 120px;
+                height: 25px; 
+                display: inline-block;
+                text-align: center;
+            }
+
+            #temperature-value {
+                font-family: Verdana, Geneva, sans-serif;
+                border-radius: 5px;
+                background: #1D1D1D;
+                box-shadow: 1px 1px #1A1A1A;
+                padding-top: 5px;
+                padding-bottom: 30px;
+                width: 90px;
+                height: 25px; 
+                display: inline-block;
+                text-align: center;
+            }        
+            
+            a {
+                text-decoration: none;
+                color: lightslategray;
+            }
+
+            footer {
+                position: absolute; 
+                bottom: 2%;
+                font-family: Verdana, Geneva, sans-serif;
+                color: lightslategray;
+                text-align: center;
+                font-size: 8pt;
+                margin: 0 auto;
+                left: 0;
+                right: 0;
+            }
+        </style>
+        </head>
+    <body>
+        <div class="vertical_center">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-3">
+                        <div class="row">
+                            <div class="col-12">
+                                Current temperature
+                            </div>
+                        </div>
+                        <div class="row">
+                            <canvas id="temperature-gauge">gauge</canvas>
+                        </div>
+                        <div class="row">
+                            <div id="temperature-value-container" class="col-12">
+                                <div id="temperature-value">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="row">
+                            <div class="col-12">
+                                Download speed
+                            </div>
+                        </div>
+                        <div class="row">
+                            <canvas id="speed-gauge">gauge</canvas>
+                        </div>
+                        <div class="row">
+                            <div id="speed-value-container" class="col-12">
+                                <div id="speed-value">0</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div id="speed-max-value-container" class="col-12">
+                                <div id="speed-max-value"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>                
+            </div>
+        </div>
+
+        <footer>
+            <img src="images/logo-red.png" width="32" height="33" style="margin-bottom: -1%;"> <b>•</b> <a href="https://git.martin-abadie.fr/MartinAbadie/PiThermalMonitoring" target="blank_" >PiThermalMonitoring</a> <b>•</b> Developped by <a href="https://martin-abadie.fr" target="blank_" >Martin Abadie</a>
+        </footer>
+        
+
+        <!-- JavaScript -->
+        <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+        <script src="lib/gauge.js"></script>
+        <script type="text/javascript">
+
+            let socket;
+    
+            var opts_temp = {
+                angle: 0.15, // The span of the gauge arc
+                lineWidth: 0.44, // The line thickness
+                radiusScale: 1, // Relative radius
+                pointer: {
+                    length: 0.6, // // Relative to gauge radius
+                    strokeWidth: 0.035, // The thickness
+                    color: '#FFFFFF' // Fill color
+                },
+                staticZones: [
+                    {strokeStyle: "#FF0000", min: 45, max: 60}, // Red from 100 to 130
+                    {strokeStyle: "#F07F3E", min: 35, max: 45}, // Orange
+                    {strokeStyle: "#30B32D", min: 0, max: 35}, // Green
+                ],
+                limitMax: false,     // If false, max value increases automatically if value > maxValue
+                limitMin: false,     // If true, the min value of the gauge will be fixed
+                colorStart: '#6FADCF',   // Colors
+                colorStop: '#8FC0DA',    // just experiment with them
+                strokeColor: '#FFFFFF',  // to see which ones work best for you
+                generateGradient: true,
+                highDpiSupport: true     // High resolution support
+            };
+    
+            var opts_speed = {
+                angle: 0.15, // The span of the gauge arc
+                lineWidth: 0.44, // The line thickness
+                radiusScale: 1, // Relative radius
+                pointer: {
+                    length: 0.6, // // Relative to gauge radius
+                    strokeWidth: 0.035, // The thickness
+                    color: '#FFFFFF' // Fill color
+                },
+                staticZones: [
+                    {strokeStyle: "#FF0000", min: 0, max: 1}, // Red from 100 to 130
+                    {strokeStyle: "#F07F3E", min: 1, max: 3}, // Orange
+                    {strokeStyle: "#30B32D", min: 3, max: 20}, // Green
+                ],
+                limitMax: false,     // If false, max value increases automatically if value > maxValue
+                limitMin: false,     // If true, the min value of the gauge will be fixed
+                colorStart: '#6FADCF',   // Colors
+                colorStop: '#8FC0DA',    // just experiment with them
+                strokeColor: '#FFFFFF',  // to see which ones work best for you
+                generateGradient: true,
+                highDpiSupport: true     // High resolution support
+            };
+    
+            var target_temp = document.getElementById('temperature-gauge'); // your canvas element
+            var target_speed = document.getElementById('speed-gauge'); // your canvas element
+            //var target = $('#temperature'); // your canvas element
+    
+            let gauge_temp = new Gauge(target_temp).setOptions(opts_temp); // create sexy gauge!
+            let gauge_speed = new Gauge(target_speed).setOptions(opts_speed); // create sexy gauge!
+    
+            gauge_temp.maxValue = 60; // set max gauge value
+            gauge_temp.setMinValue(0);  // Prefer setter over gauge.minValue = 0
+            gauge_temp.animationSpeed = 32; // set animation speed (32 is default value)
+    
+            gauge_speed.maxValue = 20; // set max gauge value
+            gauge_speed.setMinValue(0);  // Prefer setter over gauge.minValue = 0
+            gauge_speed.animationSpeed = 32; // set animation speed (32 is default value)
+    
+            $('document').ready(function() {
+                // socket = io.connect("https://node.thermal.martin-abadie.fr");
+                socket = io.connect("http://localhost:8666");
+                if(socket) {
+                    console.log('Connected!');
+
+                    var speed_checked = false;
+    
+                    var id = window.setInterval(function() {
+                        if(socket) {
+                            if(!speed_checked) {
+                                socket.emit('message', 'speed?');
+                            }
+                            speed_checked = true;
+                            socket.emit('message', 'temp?');
+                        }
+                    }, 300);
+    
+                    var speedtest_finished = false;
+    
+                    socket.on('message', function(message) {
+                        if(message.type === 'speed') {
+                            if(message.value === 'finish') {
+                                speedtest_finished = true;
+                            } else {       
+                                if(!speedtest_finished) {
+                                    $('#speed-value').html('<b>' + message.value + ' Mo/s</b>');
+                                    gauge_speed.set(message.value); // set actual value
+                                } else {
+                                    $('#speed-max-value').html('<b>Max speed : ' + message.value + ' Mo/s</b>');
+                                }
+                            }
+                        } else if(message.type === 'temp') {
+                            $('#temperature-value').html('<b>' + message.value + '°C</b>');
+                            gauge_temp.set(message.value); // set actual value
+                        }
+                    });
+    
+                    socket.on('disconnect', function() {
+                        clearInterval(id);
+                        console.log('Server close');
+                    })
+                } else {
+                    console.log('Connection failed');
+                }
+            });
+        </script>
+    </body>
 </html>

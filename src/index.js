@@ -4,6 +4,7 @@ var io = require('socket.io');
 var mysql = require('mysql');
 var http = require('http');
 var fs = require('fs');
+var speedTest = require('speedtest-net');
 
 // Create MySQL connection with data contained in database-config.json file
 let con = mysql.createConnection({
@@ -20,10 +21,34 @@ io = io.listen(server);
 
 io.sockets.on('connection', function(socket) {
     console.log('New connection');
+    var max_speed = 0;
+    let test = speedTest({maxTime: 5000});
     socket.on('message', function(message) {
-        ds18b20.temperature('28-051684eebbff', function(err, value) {
-            socket.emit('message', value);
-        });
+        if (message === "temp?") {
+            ds18b20.temperature('28-051684eebbff', function(err, value) {
+                tmp = { type: 'temp', value: value };
+                socket.emit('message', tmp);
+            });
+        } else if (message === "speed?") {
+            test.on('downloadspeedprogress', speed => {
+                value = (speed * 0.125).toFixed(2);
+                if(value > max_speed) {
+                    max_speed = value
+                }
+                console.log(value);
+                tmp = { type: 'speed', value: value };
+                socket.emit('message', tmp);
+            });
+            test.on('done', dataOverload => {
+                // console.dir(data);
+                tmp = { type: 'speed', value: 'finish' };
+                socket.emit('message', tmp);
+
+                tmp = { type: 'speed', value: max_speed };
+                socket.emit('message', tmp);
+                console.log('Max speed : ' + max_speed + 'Mo/s');
+            });
+        }
     });
 });
 
