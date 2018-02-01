@@ -80,7 +80,7 @@
                         </div>
                         <div class="row">
                             <div id="temperature-value-container" class="col-12">
-                                <div id="temperature-value">0</div>
+                                <div id="temperature-value">Loading...</div>
                             </div>
                         </div>
                     </div>
@@ -185,8 +185,8 @@
             gauge_speed.animationSpeed = 32; // set animation speed (32 is default value)
     
             $('document').ready(function() {
-                // socket = io.connect("https://node.thermal.martin-abadie.fr");
-                socket = io.connect("http://localhost:8666");
+                socket = io.connect("https://node.thermal.martin-abadie.fr");
+                // socket = io.connect("http://localhost:8666");
                 if(socket) {
                     console.log('Connected!');
 
