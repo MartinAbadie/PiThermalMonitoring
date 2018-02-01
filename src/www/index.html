@@ -95,7 +95,7 @@
                         </div>
                         <div class="row">
                             <div id="speed-value-container" class="col-12">
-                                <div id="speed-value">0</div>
+                                <div id="speed-value">Loading...</div>
                             </div>
                         </div>
                         <div class="row">
@@ -185,8 +185,8 @@
             gauge_speed.animationSpeed = 32; // set animation speed (32 is default value)
     
             $('document').ready(function() {
-                socket = io.connect("https://node.thermal.martin-abadie.fr");
-                // socket = io.connect("http://localhost:8666");
+                // socket = io.connect("https://node.thermal.martin-abadie.fr");
+                socket = io.connect("http://localhost:8666");
                 if(socket) {
                     console.log('Connected!');
 
@@ -213,6 +213,7 @@
                                     $('#speed-value').html('<b>' + message.value + ' Mo/s</b>');
                                     gauge_speed.set(message.value); // set actual value
                                 } else {
+                                    $('#speed-value').html('<b>Done...</b>');
                                     $('#speed-max-value').html('<b>Max speed : ' + message.value + ' Mo/s</b>');
                                 }
                             }

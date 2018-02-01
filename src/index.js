@@ -21,8 +21,8 @@ io = io.listen(server);
 
 io.sockets.on('connection', function(socket) {
     console.log('New connection');
-    var max_speed = 0;
-    let test = speedTest({maxTime: 5000});
+    let max_speed = 0;
+    let test = speedTest({maxTime: 6000});
     socket.on('message', function(message) {
         if (message === "temp?") {
             ds18b20.temperature('28-051684eebbff', function(err, value) {
@@ -32,10 +32,11 @@ io.sockets.on('connection', function(socket) {
         } else if (message === "speed?") {
             test.on('downloadspeedprogress', speed => {
                 value = (speed * 0.125).toFixed(2);
-                if(value > max_speed) {
-                    max_speed = value
+                if(parseFloat(value) > parseFloat(max_speed)) {
+                    // console.log(value);
+                    max_speed = value;
                 }
-                console.log(value);
+                console.log('New values : ' + value + ' Max Speed : ' + max_speed);
                 tmp = { type: 'speed', value: value };
                 socket.emit('message', tmp);
             });
